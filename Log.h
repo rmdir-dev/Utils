@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "String.h"
 #include <glm/glm.hpp>
+#include "Event/Event.h"
 
 #define LEVEL_INFO      0
 #define LEVEL_WARNING   1
@@ -20,9 +21,27 @@ namespace Log
     };
 
     template<typename T>
-    const char* toString(const T& t)
+    inline const char* toString(const T& t)
     {
         return " !NO TYPE FOUND! ";
+    }
+
+    template<>
+    inline const char* toString<const char*>(const char* const& c)
+    {
+        return c;
+    }
+
+    template<>
+    inline const char* toString<std::string>(const std::string& s)
+    {
+        return s.c_str();
+    }
+
+    template<>
+    inline const char* toString<Event::Event>(const Event::Event& e)
+    {
+        return e.toString().c_str();
     }
 
     template<>
