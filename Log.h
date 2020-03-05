@@ -7,7 +7,7 @@
 #define LEVEL_INFO      0
 #define LEVEL_WARNING   1
 #define LEVEL_ERROR     2
-#define LEVEL_FATAL     3
+#define LEVEL_CRITICAL  3
 
 namespace Log
 {
@@ -16,7 +16,7 @@ namespace Log
         Info = 0,
         Warning,
         Error,
-        Fatal
+        Critical
     };
 
     template<typename T>
@@ -32,9 +32,9 @@ namespace Log
     }
 
     template<typename First>
-    void logOutput(char* buffer, int& index, First&& first)
+    void getMessage(char* buffer, int& index, First&& first)
     {
-        const *char formatted = toString<First>(first);
+        const char* formatted = toString<First>(first);
         int length = strlen(formatted);
         memcpy(&buffer[index], formatted, length);
         index += length;
@@ -43,13 +43,14 @@ namespace Log
     template<typename First, typename... Args>
     void getMessage(char* buffer, int& index, First&& first, Args&&... args) 
     {
-        const *char formatted = toString<First>(first);
+        std::cout << first << "\n";
+        const char* formatted = toString<First>(first);
         int length = strlen(formatted);
         memcpy(&buffer[index], formatted, length);
         index += length;
         if(sizeof...(Args))
         {
-            logOutput(buffer, int& index, std::forward<Args>(args)...);
+            getMessage(buffer, index, std::forward<Args>(args)...);
         }
     }
 
@@ -60,9 +61,40 @@ namespace Log
         int index = 0;
         
         //perfect forwarding args to fill the buffer args per args.
-        logOutput(buffer, index, std::forward<Args>(args)...);
+        getMessage(buffer, index, std::forward<Args>(args)...);
 
         //Null character to end the string.
         buffer[index] = 0;
+
+        std::cout << buffer << "\n";
     }
 }
+
+#ifndef CORE_LOG_LEVEL
+#define CORE_LOG_LEVEL 0
+#endif
+
+#if CORE_LOG_LEVEL <= LEVEL_CRITICAL
+#define CORE_CRITICAL(...) Log::fillBuffer(Log::LogLevel::Critical, __VA_ARGS__)
+#else
+#define CORE_CRITICAL(...)
+#endif
+
+#if CORE_LOG_LEVEL <= LEVEL_ERROR
+#define CORE_ERROR(...) Log::fillBuffer(Log::LogLevel::Error, __VA_ARGS__)
+#else
+#define CORE_ERROR(...)
+#endif
+
+#if CORE_LOG_LEVEL <= LEVEL_WARNING
+#define CORE_WARNING(...) Log::fillBuffer(Log::LogLevel::Warning, __VA_ARGS__)
+#else
+#define CORE_WARNING(...)
+#endif
+
+#if CORE_LOG_LEVEL <= LEVEL_INFO
+#define CORE_INFO(...) Log::fillBuffer(Log::LogLevel::Info, __VA_ARGS__)
+#else
+#define CORE_INFO(...)
+#endif
+
