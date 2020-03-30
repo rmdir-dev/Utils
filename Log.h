@@ -1,7 +1,6 @@
 #pragma once
 
 #include "pch.h"
-#include "String.h"
 #include <glm/glm.hpp>
 #include "Event/Event.h"
 
