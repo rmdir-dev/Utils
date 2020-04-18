@@ -17,7 +17,7 @@ namespace Log
 		switch (level)
 		{
 		case LogLevel::Info:
-			std::cout << "\033[1;37m" << "[INFO] " << message << reset;
+			std::cout << "\033[1;37m" << message << reset;
 			break;
 		case LogLevel::Error:
 			std::cout << "\033[1;31m" << "[ERROR] " << message << reset;
