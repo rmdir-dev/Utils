@@ -81,6 +81,15 @@ namespace Log
     }
 
     /*
+    Convert float to const char*
+    */
+    template<>
+    inline const char* toString<float>(const float& f)
+    {
+        return std::to_string(f).c_str();
+    }
+
+    /*
     Get the log message.
     */
     template<typename First>
