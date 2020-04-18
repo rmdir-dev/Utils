@@ -19,55 +19,99 @@ namespace Log
         Critical
     };
 
+    /*
+    Send Log message to the right platform (OS)
+    Args:
+     - level : the message Log level
+     - message : the message buffer.
+    */
+    void platformLogMessage(LogLevel level, const char* message);
+    
+    /*
+    Platform break, set a break point in function of the OS.
+    */
+    void platformBreak();
+
+    /*
+        Convert a variable T into string,
+        Use toString<TYPE>()
+        This will be used if no the type was not found.
+        If this function is used, create a toString<TYPE>() function for that type.
+    */
     template<typename T>
     inline const char* toString(const T& t)
     {
         return " !NO TYPE FOUND! ";
     }
 
+    /*
+    "Convert" const char* to const char*
+    */
     template<>
     inline const char* toString<const char*>(const char* const& c)
     {
         return c;
     }
 
+    /*
+    Convert std::string to const char*
+    */
     template<>
     inline const char* toString<std::string>(const std::string& s)
     {
         return s.c_str();
     }
 
+    /*
+    Convert Event::Event to const char*
+    */
     template<>
     inline const char* toString<Event::Event>(const Event::Event& e)
     {
         return e.toString().c_str();
     }
 
+    /*
+    Convert int to const char*
+    */
     template<>
-    const char* toString<int>(const int& i)
+    inline const char* toString<int>(const int& i)
     {
         return std::to_string(i).c_str();
     }
 
+    /*
+    Get the log message.
+    */
     template<typename First>
     void getMessage(char* buffer, int& index, First&& first)
     {
+        //Convert First into const char*
         const char* formatted = toString<First>(first);
+        //Get the lenght of the string
         int length = strlen(formatted);
+        //Copy the message into the buffer.
         memcpy(&buffer[index], formatted, length);
+        //Set the buffer index to the end of the message.
         index += length;
     }
 
     template<typename First, typename... Args>
     void getMessage(char* buffer, int& index, First&& first, Args&&... args) 
     {
-        std::cout << first << "\n";
+        //Convert First into const char*
         const char* formatted = toString<First>(first);
+        //Get the lenght of the string
         int length = strlen(formatted);
+        //Copy the message into the buffer.
         memcpy(&buffer[index], formatted, length);
+        //Set the buffer index to the end of the message.
         index += length;
+        
+        //If there is more args
         if(sizeof...(Args))
         {
+            //Get the message of the other args.
             getMessage(buffer, index, std::forward<Args>(args)...);
         }
     }
@@ -75,7 +119,9 @@ namespace Log
     template<typename... Args>
     void fillBuffer(LogLevel level, Args... args)
     {
+        //Set the buffer
         char buffer[1024 * 10];
+        //Set buffer index
         int index = 0;
         
         //perfect forwarding args to fill the buffer args per args.
@@ -83,8 +129,9 @@ namespace Log
 
         //Null character to end the string.
         buffer[index] = 0;
-
-        std::cout << buffer << "\n";
+        
+        //Return the log message.
+        platformLogMessage(level, buffer);
     }
 }
 
