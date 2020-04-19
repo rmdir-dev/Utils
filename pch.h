@@ -25,10 +25,7 @@
 #include <unordered_map>
 
 // DEFINITIONS
-#define BITFIELD(x) (1 << x)
-
-typedef unsigned int uint;
-typedef unsigned char byte;
+#include "Type.h"
 typedef std::string String;
 typedef std::string_view StrView;
 
