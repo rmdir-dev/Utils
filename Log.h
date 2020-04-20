@@ -81,6 +81,15 @@ namespace Log
     }
 
     /*
+    Convert unsigned int to const char*
+    */
+    template<>
+    inline const char* toString<uint>(const uint& i)
+    {
+        return std::to_string(i).c_str();
+    }
+
+    /*
     Convert float to const char*
     */
     template<>
