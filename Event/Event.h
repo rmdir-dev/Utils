@@ -12,7 +12,7 @@ namespace Event
         WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
         AppTick, AppUpdate, AppRender,
         KeyPressed, KeyReleased, KeyTyped,
-        MouseBUttonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
     //Event category flags.
