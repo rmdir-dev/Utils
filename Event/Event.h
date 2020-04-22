@@ -39,7 +39,7 @@ namespace Event
         virtual EventType getType() const = 0;
         virtual const char* getName() const = 0;
         virtual int getCategoryFlags() const = 0;
-        virtual std::string toString() const { getName(); }
+        virtual std::string toString() const { return getName(); }
 
         inline bool isInCategory(EventCategory cat) const 
         {

@@ -41,4 +41,24 @@ namespace Event
     private:
     	int m_RepeatKeyCount;
     };
+
+	class KeyReleased : public KeyEvent
+    {
+    public:
+    	KeyReleased(int KeyCode)
+    		: KeyEvent(KeyCode)
+    	{}
+
+    	std::string toString() const override
+    	{
+    		std::stringstream ss;
+    		ss << "Key released Event : " << m_KeyCode;
+    		return ss.str();
+    	}
+
+    	EVENT_CLASS_TYPE(KeyReleased);
+
+    private:
+    	
+    };
 }
